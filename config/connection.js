@@ -1,7 +1,7 @@
 const {connect, connection} = require('mongoose');
 
 // Establishes connection to mongodb and the socialDB
-connection('mongodb://localhost/socialDB', {
+connect('mongodb://localhost/socialDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
