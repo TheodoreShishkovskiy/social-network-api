@@ -3,7 +3,7 @@ const {Thought, User} = require('../models');
 // This will set up the entire Thoughts Controller
 // That includes Get, Post, Update, and Delete of thoughts, as well as reactions
 module.exports = {
-  // Function to gather all thoughts
+// Function to gather all thoughts
   async getAllThoughts({params, body}, res) {
     try {
       const allThoughts = 
