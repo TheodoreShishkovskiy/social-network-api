@@ -64,4 +64,48 @@ module.exports = {
     }
   },
 
+  // Function to delete/destroy a User
+  async deleteUser({params}, res) {
+    try{
+      const userThoughts =
+      await Thought.deleteMany({user: params.id});
+      const userDelete = 
+      await User.findOneAndDelete({_id: params.id}, {new: true});
+      if (!userDelete) {res.status(404).json({message: 'There is no User by this id'});
+    }
+    res.json(userDelete)
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // Function to be able to add a reaction to a thought
+  async addReaction({params}, res) {
+    try {
+      const newFriendInfo =
+      await User.findOne({_id: params.friendId});
+      const userFriendInfo =
+      await User.findOneAndUpdate({_id: params.userId}, {$push: {friends: newFriendInfo._id}}, {new: true})
+      .populate('friends');
+      res.json(userFriendInfo);
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // Function to removes a reaction from a thought
+  async removeReaction({params}, res) {
+    try {
+      const userInfo =
+      await User.findOneAndUpdate({_id: params.userId}, {$pull: {friends: {$in: [params.friendId]}}}, {new: true })
+      .populate('friends');
+      await userInfo.save();
+      res.json(userInfo);
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
 }

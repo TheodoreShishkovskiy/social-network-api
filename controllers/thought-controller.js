@@ -88,7 +88,7 @@ module.exports = {
   },
 
   // Function to removes a reaction from a thought
-  async removeReaction({params} res) {
+  async removeReaction({params}, res) {
     try {
       const thoughtsInfo = 
       await Thought.findOneAndUpdate({_id: params.thoughtId}, {$pull: {reactions: {reactionId: params.reactionId}}}, {new: true, runValidators: true});
