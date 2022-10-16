@@ -81,7 +81,7 @@ module.exports = {
   },
 
   // Function to be able to add a reaction to a thought
-  async addReaction({params}, res) {
+  async makeFriend({params}, res) {
     try {
       const newFriendInfo =
       await User.findOne({_id: params.friendId});
@@ -96,7 +96,7 @@ module.exports = {
   },
 
   // Function to removes a reaction from a thought
-  async removeReaction({params}, res) {
+  async deleteFriend({params}, res) {
     try {
       const userInfo =
       await User.findOneAndUpdate({_id: params.userId}, {$pull: {friends: {$in: [params.friendId]}}}, {new: true })
