@@ -3,7 +3,7 @@ const {Thought, User} = require('../models');
 // This will set up the entire Thoughts Controller
 // That includes Get, Post, Update, and Delete of thoughts, as well as reactions
 module.exports = {
-// Function to gather all thoughts
+  // Function to gather all thoughts
   async getAllThoughts({params, body}, res) {
     try {
       const allThoughts = 
@@ -62,12 +62,38 @@ module.exports = {
     }
   },
 
-  // function to delete/destroy a thought
+  // Function to delete/destroy a thought
   async deleteThought({params, body}, res) {
     try{
       const thoughtsInfo = 
       await Thought.findOneAndDelete({_id: params.thoughtId})
       await thoughtsInfo.save();
+      res.json(thoughtsInfo);
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // Function to be able to add a reaction to a thought
+  async addReaction({params, body}, res) {
+    try {
+      const thoughtsInfo = 
+      await Thought.findOneAndUpdate({_id: params.thoughtId}, {$push: {reactions: body}}, {new: true, runValidators: true})
+      res.json(thoughtsInfo);
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // Function to removes a reaction from a thought
+  async removeReaction({params} res) {
+    try {
+      const thoughtsInfo = 
+      await Thought.findOneAndUpdate({_id: params.thoughtId}, {$pull: {reactions: {reactionId: params.reactionId}}}, {new: true, runValidators: true});
+      const reactionRemove =
+      await Reaction.deleteOne({reactionId: params.reactionId});
       res.json(thoughtsInfo);
     }
     catch (err) {
