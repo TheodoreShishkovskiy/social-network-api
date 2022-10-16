@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/TheodoreShishkovskiy/social-network-api#readme",
   "dependencies": {
-    "dateformat": "^4.2.2",
-    "express": "^4.17.1",
-    "mongoose": "^5.11.3"
+    "moment": "^2.29.4",
+    "express": "^4.18.2",
+    "mongoose": "^6.6.5",
+    "mongodb": "^4.10.0"
   }
 }
