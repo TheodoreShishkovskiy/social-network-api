@@ -6,7 +6,8 @@ module.exports = {
 // Function to gather all thoughts
   async getAllThoughts({params, body}, res) {
     try {
-      const allThoughts = await Thought.find({})
+      const allThoughts = 
+      await Thought.find({})
       .select('-__v');
       if (!allThoughts.length) {
         res.json({message: 'There are no thoughts here!'});
@@ -20,15 +21,57 @@ module.exports = {
   },
 
   // Function to gather individual thoughts by their `id`
-  async getThoughtById({params}, res) {
+  async findThoughtById({params}, res) {
     try {
-      const thoughtData = await Thought.findOne({_id: params.thoughtId})
+      const thoughtsInfo = await 
+      Thought.findOne({_id: params.thoughtId})
       .select('-__v')
       .populate('user');
-      res.json(thoughtData);
+      res.json(thoughtsInfo);
     }
     catch (err) {
       this.res.status(500).json(err);
+    }
+  },
+
+  // Function to create another thought
+  async createThought({params, body}, res) {
+    try {
+      const addThought =
+      await Thought.create(body);
+      const usersInfo = 
+      await User.findOneandUpdate({_id: params.userId}, {$push: {thoughts: addThought._id}}, {new: true, runValidators: true});
+      addThought.user = usersInfo;
+      await addThought.save();
+      res.send(addThought);
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // Function to update a certain thought
+  async updateThought({params, body}, res) {
+    try{
+      const thoughtsInfo =
+      await Thought.findOneAndUpdate({_id: params.thoughtId}, body, {new: true});
+      res.json(thoughtsInfo);
+    }
+    catch (err) {
+      res.status(500).json(err);
+    }
+  },
+
+  // function to delete/destroy a thought
+  async deleteThought({params, body}, res) {
+    try{
+      const thoughtsInfo = 
+      await Thought.findOneAndDelete({_id: params.thoughtId})
+      await thoughtsInfo.save();
+      res.json(thoughtsInfo);
+    }
+    catch (err) {
+      res.status(500).json(err);
     }
   },
 }
